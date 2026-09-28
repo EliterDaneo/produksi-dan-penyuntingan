@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Studio Produksi — Media Ajar Literasi Digital (Pertemuan 2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#12132B;--paper:#F7F5EF;--panel:#FFFFFF;--navy:#1B1B3A;--amber:#E7A93B;--coral:#E86A5C;--mint:#3FA796;--line:#C9C4B4;--shadow:0 10px 26px rgba(18,19,43,.10);}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#F2F0E8;--paper:#141428;--panel:#1D1D3A;--line:#3A3A5C;--shadow:0 10px 26px rgba(0,0,0,.35);}}
+:root[data-theme="dark"]{--ink:#F2F0E8;--paper:#141428;--panel:#1D1D3A;--line:#3A3A5C;--shadow:0 10px 26px rgba(0,0,0,.35);}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{margin:0;min-height:100dvh;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);display:flex;flex-direction:column;overflow-x:hidden;}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:700;margin:0;}
+.wrap{max-width:920px;margin:0 auto;padding:0 22px;width:100%;}
+#trail{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px);}
+#trail .row{display:flex;align-items:center;gap:8px;padding:10px 16px;max-width:920px;margin:0 auto;overflow-x:auto;}
+.node{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;background:var(--panel);color:var(--ink);}
+.node.done{background:var(--mint);border-color:var(--mint);color:#fff;}
+.node.active{background:var(--amber);border-color:var(--amber);color:var(--navy);transform:scale(1.18);}
+.seg{flex:1 1 8px;height:2px;background:var(--line);min-width:8px;}.seg.done{background:var(--mint);}
+main{flex:1;display:flex;align-items:center;padding:28px 0 100px;}
+.slide{width:100%;animation:in .35s ease;}
+@keyframes in{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion: reduce){.slide{animation:none;}}
+.eyebrow{color:var(--coral);font-weight:600;font-size:14px;}
+h2.title{font-size:clamp(26px,4.4vw,40px);line-height:1.15;margin:6px 0 14px;}
+p.lede{font-size:17px;line-height:1.6;max-width:70ch;opacity:.92;}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);}
+.grid{display:grid;gap:14px;}.g2{grid-template-columns:1fr 1fr;}.g3{grid-template-columns:repeat(3,1fr);}
+@media (max-width:700px){.g2,.g3{grid-template-columns:1fr;}}
+.flip{perspective:1000px;height:190px;cursor:pointer;}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flip.on .flip-inner{transform:rotateY(180deg);}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;box-shadow:var(--shadow);text-align:center;}
+.back{transform:rotateY(180deg);background:var(--navy);color:#fff;font-size:13.5px;line-height:1.45;}
+.icon{font-size:36px;margin-bottom:8px;}.hint{font-size:12px;opacity:.6;margin-top:6px;}
+ul.bullets{padding-left:20px;margin:10px 0;line-height:1.6;}ul.bullets li{margin-bottom:8px;}
+.btnrow{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;}
+button.btn{font:inherit;font-weight:600;border:none;border-radius:999px;padding:12px 22px;cursor:pointer;background:var(--navy);color:#fff;}
+button.btn:active{transform:scale(.96);}button.btn:disabled{opacity:.4;cursor:default;}
+button.btn.ghost{background:transparent;border:2px solid var(--line);color:var(--ink);}
+button.btn.amber{background:var(--amber);color:var(--navy);}
+.chipbtn{font:inherit;font-weight:600;border:2px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:8px 16px;cursor:pointer;}
+.chipbtn.on{background:var(--amber);border-color:var(--amber);color:var(--navy);}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.opt{display:block;width:100%;text-align:left;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:8px;cursor:pointer;font:inherit;color:var(--ink);}
+.opt:hover{border-color:var(--amber);}
+.opt.correct{border-color:var(--mint);background:rgba(63,167,150,.15);}
+.opt.wrong{border-color:var(--coral);background:rgba(232,106,92,.15);}
+.opt:disabled{cursor:default;}
+.feedback{font-size:14px;font-weight:600;margin-top:8px;min-height:20px;line-height:1.5;}
+.score-hero{text-align:center;padding:20px 0;}.score-num{font-size:64px;font-family:'Space Grotesk';font-weight:700;color:var(--amber);}
+textarea.reflect,textarea.inp,input.inp{width:100%;font:inherit;border:2px solid var(--line);border-radius:12px;padding:12px;background:var(--panel);color:var(--ink);}
+textarea.reflect{min-height:80px;resize:vertical;}
+label.qlabel{display:block;font-weight:600;margin:14px 0 6px;}
+.small{font-size:13px;opacity:.7;}
+.flow-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;margin:14px 0;}
+.flow-node{background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center;min-width:100px;font-size:13px;font-weight:600;cursor:pointer;}
+.flow-node.active{border-color:var(--amber);background:rgba(231,169,59,.18);transform:scale(1.06);}
+.frames{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+@media (max-width:700px){.frames{grid-template-columns:1fr 1fr;}}
+.frame{border:2px dashed var(--line);border-radius:10px;padding:10px;min-height:96px;font-size:13px;background:var(--panel);}
+.frame b{color:var(--coral);}
+.meter{height:12px;border-radius:99px;background:var(--line);overflow:hidden;margin:10px 0;}
+.meter>i{display:block;height:100%;background:var(--mint);width:0;transition:width .3s;}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer;}
+.chk input{margin-top:4px;width:18px;height:18px;}
+.poster{border-radius:14px;padding:22px;min-height:190px;transition:all .3s;}
+.poster.bad{background:linear-gradient(90deg,#f3e46b,#9be36f);color:#e8d95c;font-size:11px;line-height:1.1;font-family:'Comic Sans MS',cursive;}
+.poster.good{background:var(--navy);color:#fff;font-size:15px;line-height:1.5;}
+.poster.good h3{font-size:28px;color:var(--amber);margin-bottom:10px;}
+.ratio-box{margin:10px auto;background:var(--navy);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all .3s;}
+footer{position:fixed;bottom:0;left:0;right:0;background:var(--paper);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));z-index:20;}
+.footrow{max-width:920px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+</style>
+</head>
+<body>
+<nav id="trail"><div class="row" id="trailRow"></div></nav>
+<main><div class="wrap" id="stage"></div></main>
+<footer><div class="footrow">
+<button class="btn ghost" id="prevBtn" onclick="go(-1)">← Kembali</button>
+<span class="small" id="progressLabel"></span>
+<button class="btn" id="nextBtn" onclick="go(1)">Lanjut →</button>
+</div></footer>
+<script>
+let cur=0,SLIDES=[],LABELS=[],QUIZ=[],quizIdx=0,quizScore=0;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+function hero(eb,t,l){return `<div class="eyebrow">${eb}</div><h2 class="title">${t}</h2>${l?`<p class="lede">${l}</p>`:''}`;}
+function bullets(a){return `<ul class="bullets">${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;}
+function flipGrid(items,cls){return `<div class="grid ${cls||'g3'}">${items.map(c=>`<div class="flip" onclick="this.classList.toggle('on')"><div class="flip-inner"><div class="face"><div class="icon">${c.icon}</div><b>${c.n}</b><div class="hint">${c.sub||'ketuk untuk membalik'}</div></div><div class="face back"><div>${c.fn}</div></div></div></div>`).join('')}</div>`;}
+// blok skenario: tiap butir dijawab sendiri-sendiri
+function scenarioBlock(id,items){
+  window['SC_'+id]=items;
+  return items.map((it,k)=>`<div class="card" style="margin-bottom:12px;"><b>${it.q}</b><div id="sc${id}_${k}">${it.opts.map((o,i)=>`<button class="opt" onclick="scAnswer('${id}',${k},${i})">${o}</button>`).join('')}</div><div class="feedback" id="scf${id}_${k}"></div></div>`).join('');
+}
+function scAnswer(id,k,i){
+  const it=window['SC_'+id][k];
+  document.querySelectorAll(`#sc${id}_${k} .opt`).forEach((b,idx)=>{b.disabled=true;if(idx===it.a)b.classList.add('correct');else if(idx===i)b.classList.add('wrong');});
+  const f=$(`scf${id}_${k}`);f.style.color=i===it.a?'var(--mint)':'var(--coral)';f.textContent=(i===it.a?'✅ Tepat! ':'❌ Belum tepat. ')+it.why;
+}
+function quizSlide(){
+  if(quizIdx>=QUIZ.length){return hero('HASIL KUIS FORMATIF','Selesai! 🎉','')+`<div class="card score-hero"><div class="score-num">${quizScore}/${QUIZ.length}</div><p class="lede" style="margin:8px auto 0;">${quizScore===QUIZ.length?'Sempurna! Pemahamanmu sudah mantap.':quizScore>=3?'Bagus! Sedikit lagi kamu menguasai semuanya.':'Yuk ulangi materinya, lalu coba kuis sekali lagi.'}</p><div class="btnrow" style="justify-content:center;"><button class="btn amber" onclick="quizReset()">↺ Ulangi kuis</button></div></div>`;}
+  const it=QUIZ[quizIdx];
+  return hero(`KUIS FORMATIF · SOAL ${quizIdx+1}/${QUIZ.length}`,'Uji pemahamanmu','')+`<div class="card"><p style="font-size:17px;font-weight:600;">${it.q}</p><div id="optBox">${it.opts.map((o,i)=>`<button class="opt" onclick="answerQuiz(${i})">${o}</button>`).join('')}</div><div class="feedback" id="quizFeedback"></div></div>`;
+}
+function answerQuiz(i){
+  const it=QUIZ[quizIdx];
+  document.querySelectorAll('#optBox .opt').forEach((b,idx)=>{b.disabled=true;if(idx===it.a)b.classList.add('correct');else if(idx===i)b.classList.add('wrong');});
+  const f=$('quizFeedback');
+  if(i===it.a){quizScore++;f.style.color='var(--mint)';f.textContent='✅ Benar!';}else{f.style.color='var(--coral)';f.textContent='❌ Belum tepat, jawaban benar ditandai hijau.';}
+  setTimeout(()=>{quizIdx++;render();},900);
+}
+function quizReset(){quizScore=0;quizIdx=0;render();}
+function reflectSlide(qs){return hero('REFLEKSI','Sebelum kita tutup…','')+`<div class="card">${qs.map((q,i)=>`<label class="qlabel">${i+1}. ${q}</label><textarea class="reflect"></textarea>`).join('')}</div><p class="small" style="margin-top:12px;">✍️ Tuliskan jawabanmu, lalu sampaikan secara lisan kepada guru/kelompokmu.</p>`;}
+function renderTrail(){let h='';SLIDES.forEach((_,i)=>{h+=`<div class="node ${i<cur?'done':''} ${i===cur?'active':''}" onclick="jump(${i})" title="${LABELS[i]}">${i+1}</div>`;if(i<SLIDES.length-1)h+=`<div class="seg ${i<cur?'done':''}"></div>`;});$('trailRow').innerHTML=h;}
+function render(){
+  $('stage').innerHTML=`<div class="slide">${SLIDES[cur]()}</div>`;
+  renderTrail();
+  $('prevBtn').disabled=cur===0;
+  $('nextBtn').style.visibility=cur===SLIDES.length-1?'hidden':'visible';
+  $('progressLabel').textContent=`${cur+1} / ${SLIDES.length} · ${LABELS[cur]}`;
+  window.scrollTo(0,0);
+  if(window.afterRender)window.afterRender(cur);
+}
+function go(d){const n=cur+d;if(n>=0&&n<SLIDES.length){cur=n;render();}}
+function jump(i){cur=i;render();}
+document.addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);});
+
+QUIZ=[{"q":"Rasio aspek yang ideal untuk video vertikal (Reels/Shorts/TikTok) adalah…","opts":["16:9","9:16","1:1","4:3"],"a":1},{"q":"Format gambar yang mendukung latar belakang transparan adalah…","opts":["JPG","PNG","MP3","MP4"],"a":1},{"q":"Prinsip desain yang memastikan teks mudah dibaca di atas latar disebut…","opts":["Kontras","Animasi","Resolusi","Kompresi"],"a":0},{"q":"Sikap yang tepat saat memakai AI untuk membuat gambar konten adalah…","opts":["Menyebutkan penggunaan AI dan memeriksa hasilnya","Mengaku sepenuhnya karya sendiri","Memakai hasil AI tanpa dicek","Menyalin prompt orang lain tanpa izin"],"a":0},{"q":"Sebuah video 45 detik diekspor pada 30 frame per detik. Berapa total frame-nya?","opts":["75","1.350","450","13.500"],"a":1}];
+LABELS=["Mulai","Apersepsi","Desain","Rasio","Format","Checklist","AI","Kuis","Refleksi","Selesai"];
+let posterGood=false,ratioSel=1;
+const RATIOS=[["16:9",16,9,"Video horizontal: YouTube, layar proyektor"],["9:16",9,16,"Video vertikal: Reels, Shorts, TikTok"],["1:1",1,1,"Unggahan feed persegi"],["4:5",4,5,"Feed Instagram potret"]];
+const CHK=["Pesan utama jelas dan sesuai audiens","Teks terbaca dengan kontras yang baik","Audio jernih dan tidak terpotong","Rasio aspek dan format sesuai platform","Aset dan lisensi tercatat; atribusi dicantumkan","Subtitle / teks alternatif tersedia"];
+let chkState=CHK.map(()=>false);
+function posterToggle(){posterGood=!posterGood;$('posterBox').className='poster '+(posterGood?'good':'bad');$('posterBox').innerHTML=posterHTML();$('posterBtn').textContent=posterGood?'Lihat versi buruk 😖':'Perbaiki poster ✨';$('posterNote').textContent=posterGood?'Kontras tinggi, judul besar (hierarki), satu jenis huruf, ruang kosong cukup.':'Teks kecil, warna bertabrakan, huruf tidak konsisten, tanpa hierarki.';}
+function posterHTML(){return posterGood?'<h3>Bawa Tumbler!</h3><p>Kantin bebas plastik mulai Senin.<br>Ayo kurangi sampah dari diri sendiri.</p>':'Bawa tumbler karena kantin bebas plastik mulai senin ayo kurangi sampah dari diri sendiri terima kasih atas perhatian anda semua warga sekolah';}
+function ratioPick(i){ratioSel=i;const r=RATIOS[i],s=110/Math.max(r[1],r[2]);const b=$('ratioBox');b.style.width=(r[1]*s*1.6)+'px';b.style.height=(r[2]*s*1.6)+'px';b.textContent=r[0];document.querySelectorAll('.rbtn').forEach((x,k)=>x.classList.toggle('on',k===i));$('ratioNote').textContent=r[3];}
+function chkToggle(i){chkState[i]=!chkState[i];const n=chkState.filter(Boolean).length,p=Math.round(n/CHK.length*100);$('meterBar').style.width=p+'%';$('chkInfo').textContent=n===CHK.length?'✅ Produk siap dipublikasikan!':`${n}/${CHK.length} butir terpenuhi (${p}%) — lengkapi sebelum unggah.`;}
+SLIDES=[
+()=>hero('LITERASI DIGITAL · FASE F · PERTEMUAN 2','🎨 Studio Produksi: Membuat &amp; Menyunting','Rencana sudah ada. Saatnya mewujudkannya menjadi produk yang enak dilihat, jernih didengar, dan layak dibagikan.')+`<div class="card" style="margin-top:18px;"><b>Yang akan kita lakukan:</b>${bullets(['Menerapkan prinsip desain dasar','Memilih rasio aspek &amp; format file','Menilai kualitas produk dengan checklist','Memakai AI secara bertanggung jawab'])}</div><div class="btnrow"><button class="btn amber" onclick="go(1)">Mulai 🚀</button></div>`,
+()=>hero('APERSEPSI','🧐 Kenapa poster ini dilewatkan?','Dua poster dengan pesan sama bisa berdampak sangat berbeda. Pesannya bukan yang berubah — desainnya.')+`<div class="card"><b>Diskusikan:</b>${bullets(['Apa yang terjadi bila video horizontal diunggah ke platform vertikal?','Bolehkah gambar buatan AI dipakai untuk konten sekolah? Apa syaratnya?'])}<textarea class="reflect" placeholder="Tuliskan pendapatmu (opsional)…"></textarea></div>`,
+()=>hero('PRINSIP DESAIN','Poster buruk vs poster baik','Klik tombol untuk memperbaiki poster dan lihat bedanya.')+`<div class="card"><div id="posterBox" class="poster ${posterGood?'good':'bad'}">${posterHTML()}</div><p class="small" id="posterNote" style="margin-top:10px;">${posterGood?'Kontras tinggi, judul besar (hierarki), satu jenis huruf, ruang kosong cukup.':'Teks kecil, warna bertabrakan, huruf tidak konsisten, tanpa hierarki.'}</p><div class="btnrow"><button class="btn amber" id="posterBtn" onclick="posterToggle()">${posterGood?'Lihat versi buruk 😖':'Perbaiki poster ✨'}</button></div></div>${bullets(['<b>Kontras</b> — objek/teks menonjol dari latar','<b>Keterbacaan</b> — teks cukup besar dan jelas','<b>Hierarki</b> — mata tahu harus membaca apa dulu','<b>Konsistensi</b> — maks. 2 huruf &amp; 3–4 warna'])}`,
+()=>hero('RASIO ASPEK','Pilih bingkai yang tepat','Klik rasio untuk melihat bentuk bingkai dan penggunaannya.')+`<div class="card" style="text-align:center;"><div class="tabs" style="justify-content:center;">${RATIOS.map((r,i)=>`<button class="chipbtn rbtn ${i===ratioSel?'on':''}" onclick="ratioPick(${i})">${r[0]}</button>`).join('')}</div><div style="min-height:190px;display:flex;align-items:center;justify-content:center;"><div id="ratioBox" class="ratio-box"></div></div><p class="lede" id="ratioNote" style="margin:8px auto 0;">${RATIOS[ratioSel][3]}</p></div>`,
+()=>hero('FORMAT FILE · 6/6','Kenali format yang sering dipakai','Ketuk kartu untuk melihat kegunaannya.')+flipGrid([
+ {icon:"🖼️",n:"JPG",fn:"Foto; ukuran kecil, tanpa latar transparan."},
+ {icon:"🔷",n:"PNG",fn:"Grafik dan ikon; mendukung latar transparan."},
+ {icon:"🎵",n:"MP3",fn:"Audio terkompresi untuk narasi dan musik."},
+ {icon:"🎞️",n:"MP4",fn:"Format video paling umum dan kompatibel."},
+ {icon:"🔁",n:"GIF",fn:"Animasi pendek berulang, tanpa suara."},
+ {icon:"📄",n:"PDF",fn:"Dokumen/infografis yang mudah dibagikan."}],'g3'),
+()=>hero('CHECKLIST KUALITAS','Sudah layak dipublikasikan?','Centang butir yang sudah terpenuhi pada produk kelompokmu.')+`<div class="card">${CHK.map((c,i)=>`<label class="chk"><input type="checkbox" ${chkState[i]?'checked':''} onchange="chkToggle(${i})"><span>${c}</span></label>`).join('')}<div class="meter"><i id="meterBar" style="width:${Math.round(chkState.filter(Boolean).length/CHK.length*100)}%"></i></div><p class="small" id="chkInfo">${chkState.filter(Boolean).length}/${CHK.length} butir terpenuhi</p></div>`,
+()=>hero('AI BERTANGGUNG JAWAB','Boleh atau tidak?','Jawab tiga skenario tentang pemakaian AI dalam produksi konten.')+scenarioBlock('b',[
+ {q:'Kamu memakai AI untuk membuat ilustrasi poster. Yang tepat?',opts:['Sebutkan pemakaian AI dan periksa hasilnya','Akui sebagai gambar buatan tangan sendiri','Pakai apa adanya tanpa dicek','Salin prompt orang lain tanpa izin'],a:0,why:'Transparan soal AI dan verifikasi hasil adalah sikap jujur dan bertanggung jawab.'},
+ {q:'AI menulis naskah dengan data statistik yang terdengar meyakinkan. Yang tepat?',opts:['Cek data ke sumber tepercaya sebelum dipakai','Percaya penuh karena AI pasti benar','Hapus semua angka lalu mengarang sendiri','Langsung unggah agar cepat'],a:0,why:'AI bisa keliru; fakta dan angka wajib diverifikasi.'},
+ {q:'Ada ide membuat video "berita" dengan wajah tokoh nyata hasil AI tanpa izin. Yang tepat?',opts:['Jangan dilakukan — menyesatkan dan melanggar privasi','Boleh, asal videonya lucu','Boleh, asal tidak ketahuan','Boleh jika banyak yang menonton'],a:0,why:'Menyerupai orang nyata tanpa izin dapat menyesatkan dan melanggar hukum serta etika.'}]),
+()=>quizSlide(),
+()=>reflectSlide(['Bagian mana dari produksi konten yang paling menantang bagimu?','Apakah produkmu sudah memenuhi checklist kualitas? Bagian mana yang masih perlu diperbaiki?','Apa yang akan kamu perbaiki sebelum produk dipublikasikan?']),
+()=>hero('SAMPAI JUMPA','🏁 Produk siap dipoles!','Kamu sudah memahami desain, rasio, format, kualitas, dan etika AI dalam produksi konten.')+`<div class="card"><b>Langkah selanjutnya:</b>${bullets(['Finalisasi produk kelompok dengan checklist','Pertemuan 3: diseminasi, evaluasi, dan etika publikasi','Siapkan produk final dalam format &amp; rasio yang tepat'])}</div><p class="small" style="margin-top:14px;">💡 Kualitas bukan soal banyaknya efek, tetapi kejelasan pesan.</p>`
+];
+window.afterRender=i=>{if(i===3)ratioPick(ratioSel);};
+render();
+
+</script>
+</body>
+</html>
